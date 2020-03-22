@@ -6,12 +6,15 @@
 package Entity.service;
 
 import Entity.Organismo;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -67,6 +70,30 @@ public class OrganismoFacadeREST extends AbstractFacade<Organismo> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Organismo> findAll() {
         return super.findAll();
+    }
+    @POST
+    @Path("listado_filtrado")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Organismo> findFilter(@FormParam("codigo_organismo") int codigo_organismo, @FormParam("nombre_organismo") String nombre_organismo) {
+        String cadena = "select o from Organismo o where";
+        List<Organismo> p = new ArrayList<>();
+        Organismo org = new Organismo();
+        org.setCodigoOrganismo(codigo_organismo);
+        org.setNombreOrganismo(nombre_organismo);
+        if (org.getCodigoOrganismo()==0) {
+            cadena = cadena + " o.codigoOrganismo!=0";
+        } else {
+            cadena = cadena + " o.codigoOrganismo like '%" + org.getCodigoOrganismo()+"%'";
+        }
+        if ((org.getNombreOrganismo()== null || org.getNombreOrganismo().isEmpty())) {
+            cadena = cadena + " and o.nombreOrganismo!=''";
+        } else {
+            cadena = cadena + " and o.nombreOrganismo like '%" + org.getNombreOrganismo()+"%'";
+        }
+        em.getEntityManagerFactory().getCache().evictAll();
+        Query q = em.createQuery(cadena);
+        p = (List<Organismo>) q.getResultList();
+        return p;
     }
 
     @GET
