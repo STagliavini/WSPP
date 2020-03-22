@@ -74,13 +74,7 @@ public class Organismo implements Serializable {
     @NotNull
     @Column(name = "estado_organismo")
     private boolean estadoOrganismo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organismo")
-    private Collection<CargoEmpleado> cargoEmpleadoCollection;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "codigoOrganismop")
-    private PuntosOrganismo puntosOrganismo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organismo")
-    private Collection<ReciboSueldo> reciboSueldoCollection;
-
+    
     public Organismo() {
     }
 
@@ -153,31 +147,6 @@ public class Organismo implements Serializable {
         this.estadoOrganismo = estadoOrganismo;
     }
 
-    @XmlTransient
-    public Collection<CargoEmpleado> getCargoEmpleadoCollection() {
-        return cargoEmpleadoCollection;
-    }
-
-    public void setCargoEmpleadoCollection(Collection<CargoEmpleado> cargoEmpleadoCollection) {
-        this.cargoEmpleadoCollection = cargoEmpleadoCollection;
-    }
-
-    public PuntosOrganismo getPuntosOrganismo() {
-        return puntosOrganismo;
-    }
-
-    public void setPuntosOrganismo(PuntosOrganismo puntosOrganismo) {
-        this.puntosOrganismo = puntosOrganismo;
-    }
-
-    @XmlTransient
-    public Collection<ReciboSueldo> getReciboSueldoCollection() {
-        return reciboSueldoCollection;
-    }
-
-    public void setReciboSueldoCollection(Collection<ReciboSueldo> reciboSueldoCollection) {
-        this.reciboSueldoCollection = reciboSueldoCollection;
-    }
 
     @Override
     public int hashCode() {

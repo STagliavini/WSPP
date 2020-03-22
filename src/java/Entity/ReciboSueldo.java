@@ -12,11 +12,14 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -29,11 +32,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ReciboSueldo.findAll", query = "SELECT r FROM ReciboSueldo r")
-    , @NamedQuery(name = "ReciboSueldo.findByIdEmpleado", query = "SELECT r FROM ReciboSueldo r WHERE r.reciboSueldoPK.idEmpleado = :idEmpleado")
-    , @NamedQuery(name = "ReciboSueldo.findByIdCargo", query = "SELECT r FROM ReciboSueldo r WHERE r.reciboSueldoPK.idCargo = :idCargo")
-    , @NamedQuery(name = "ReciboSueldo.findByIdCategoria", query = "SELECT r FROM ReciboSueldo r WHERE r.reciboSueldoPK.idCategoria = :idCategoria")
-    , @NamedQuery(name = "ReciboSueldo.findByIdOrganismo", query = "SELECT r FROM ReciboSueldo r WHERE r.reciboSueldoPK.idOrganismo = :idOrganismo")
-    , @NamedQuery(name = "ReciboSueldo.findByFechaLiquidacion", query = "SELECT r FROM ReciboSueldo r WHERE r.reciboSueldoPK.fechaLiquidacion = :fechaLiquidacion")
+    , @NamedQuery(name = "ReciboSueldo.findByIdEmpleado", query = "SELECT r FROM ReciboSueldo r WHERE r.idEmpleado = :idEmpleado")
+    , @NamedQuery(name = "ReciboSueldo.findByIdCargo", query = "SELECT r FROM ReciboSueldo r WHERE r.idCargo = :idCargo")
+    , @NamedQuery(name = "ReciboSueldo.findByIdCategoria", query = "SELECT r FROM ReciboSueldo r WHERE r.idCategoria = :idCategoria")
+    , @NamedQuery(name = "ReciboSueldo.findByIdOrganismo", query = "SELECT r FROM ReciboSueldo r WHERE r.idOrganismo = :idOrganismo")
+    , @NamedQuery(name = "ReciboSueldo.findByFechaLiquidacion", query = "SELECT r FROM ReciboSueldo r WHERE r.fechaLiquidacion = :fechaLiquidacion")
     , @NamedQuery(name = "ReciboSueldo.findBySueldoBasico", query = "SELECT r FROM ReciboSueldo r WHERE r.sueldoBasico = :sueldoBasico")
     , @NamedQuery(name = "ReciboSueldo.findByMontoAntiguedad", query = "SELECT r FROM ReciboSueldo r WHERE r.montoAntiguedad = :montoAntiguedad")
     , @NamedQuery(name = "ReciboSueldo.findByJubilacion", query = "SELECT r FROM ReciboSueldo r WHERE r.jubilacion = :jubilacion")
@@ -43,10 +46,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ReciboSueldo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ReciboSueldoPK reciboSueldoPK;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Id
+    @NotNull
+    @Column(name = "id_empleado")
+    private int idEmpleado;
+    @Id
+    @NotNull
+    @Column(name = "id_cargo")
+    private int idCargo;
+    @Id
+    @NotNull
+    @Column(name = "id_categoria")
+    private int idCategoria;
+    @Id
+    @NotNull
+    @Column(name = "id_organismo")
+    private int idOrganismo;
     @Basic(optional = false)
+    @NotNull
+    @Column(name = "fecha_liquidacion")
+    @Temporal(TemporalType.DATE)
+    private Date fechaLiquidacion;
     @NotNull
     @Column(name = "sueldo_basico")
     private BigDecimal sueldoBasico;
@@ -70,46 +90,15 @@ public class ReciboSueldo implements Serializable {
     @NotNull
     @Column(name = "antiguedad")
     private int antiguedad;
-    @JoinColumn(name = "id_cargo", referencedColumnName = "id_cargo", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Cargo cargo;
-    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Categoria categoria;
-    @JoinColumn(name = "id_empleado", referencedColumnName = "codigo_empleado", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Empleado empleado;
-    @JoinColumn(name = "id_organismo", referencedColumnName = "id_organismo", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Organismo organismo;
-
     public ReciboSueldo() {
     }
-
-    public ReciboSueldo(ReciboSueldoPK reciboSueldoPK) {
-        this.reciboSueldoPK = reciboSueldoPK;
-    }
-
     public ReciboSueldo(ReciboSueldoPK reciboSueldoPK, BigDecimal sueldoBasico, BigDecimal montoAntiguedad, BigDecimal jubilacion, BigDecimal obraSocial, BigDecimal totalSueldo, int antiguedad) {
-        this.reciboSueldoPK = reciboSueldoPK;
         this.sueldoBasico = sueldoBasico;
         this.montoAntiguedad = montoAntiguedad;
         this.jubilacion = jubilacion;
         this.obraSocial = obraSocial;
         this.totalSueldo = totalSueldo;
         this.antiguedad = antiguedad;
-    }
-
-    public ReciboSueldo(int idEmpleado, int idCargo, int idCategoria, int idOrganismo, Date fechaLiquidacion) {
-        this.reciboSueldoPK = new ReciboSueldoPK(idEmpleado, idCargo, idCategoria, idOrganismo, fechaLiquidacion);
-    }
-
-    public ReciboSueldoPK getReciboSueldoPK() {
-        return reciboSueldoPK;
-    }
-
-    public void setReciboSueldoPK(ReciboSueldoPK reciboSueldoPK) {
-        this.reciboSueldoPK = reciboSueldoPK;
     }
 
     public BigDecimal getSueldoBasico() {
@@ -160,61 +149,75 @@ public class ReciboSueldo implements Serializable {
         this.antiguedad = antiguedad;
     }
 
-    public Cargo getCargo() {
-        return cargo;
+    /**
+     * @return the idEmpleado
+     */
+    public int getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
+    /**
+     * @param idEmpleado the idEmpleado to set
+     */
+    public void setIdEmpleado(int idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    /**
+     * @return the idCargo
+     */
+    public int getIdCargo() {
+        return idCargo;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    /**
+     * @param idCargo the idCargo to set
+     */
+    public void setIdCargo(int idCargo) {
+        this.idCargo = idCargo;
     }
 
-    public Empleado getEmpleado() {
-        return empleado;
+    /**
+     * @return the idCategoria
+     */
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
+    /**
+     * @param idCategoria the idCategoria to set
+     */
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
-    public Organismo getOrganismo() {
-        return organismo;
+    /**
+     * @return the idOrganismo
+     */
+    public int getIdOrganismo() {
+        return idOrganismo;
     }
 
-    public void setOrganismo(Organismo organismo) {
-        this.organismo = organismo;
+    /**
+     * @param idOrganismo the idOrganismo to set
+     */
+    public void setIdOrganismo(int idOrganismo) {
+        this.idOrganismo = idOrganismo;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (reciboSueldoPK != null ? reciboSueldoPK.hashCode() : 0);
-        return hash;
+    /**
+     * @return the fechaLiquidacion
+     */
+    public Date getFechaLiquidacion() {
+        return fechaLiquidacion;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ReciboSueldo)) {
-            return false;
-        }
-        ReciboSueldo other = (ReciboSueldo) object;
-        if ((this.reciboSueldoPK == null && other.reciboSueldoPK != null) || (this.reciboSueldoPK != null && !this.reciboSueldoPK.equals(other.reciboSueldoPK))) {
-            return false;
-        }
-        return true;
+    /**
+     * @param fechaLiquidacion the fechaLiquidacion to set
+     */
+    public void setFechaLiquidacion(Date fechaLiquidacion) {
+        this.fechaLiquidacion = fechaLiquidacion;
     }
 
-    @Override
-    public String toString() {
-        return "Entity.ReciboSueldo[ reciboSueldoPK=" + reciboSueldoPK + " ]";
-    }
     
 }

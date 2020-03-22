@@ -48,9 +48,9 @@ public class PuntosOrganismo implements Serializable {
     @NotNull
     @Column(name = "long_punto")
     private float longPunto;
-    @JoinColumn(name = "codigo_organismop", referencedColumnName = "codigo_organismo")
-    @OneToOne(optional = false)
-    private Organismo codigoOrganismop;
+    @Basic(optional = false)
+    @Column(name = "codigo_organismop")
+    private int codigoOrganismop;
 
     public PuntosOrganismo() {
     }
@@ -89,11 +89,11 @@ public class PuntosOrganismo implements Serializable {
         this.longPunto = longPunto;
     }
 
-    public Organismo getCodigoOrganismop() {
+    public int getCodigoOrganismop() {
         return codigoOrganismop;
     }
 
-    public void setCodigoOrganismop(Organismo codigoOrganismop) {
+    public void setCodigoOrganismop(int codigoOrganismop) {
         this.codigoOrganismop = codigoOrganismop;
     }
 

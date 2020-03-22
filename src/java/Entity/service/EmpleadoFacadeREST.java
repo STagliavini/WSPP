@@ -6,7 +6,10 @@
 package Entity.service;
 
 import Entity.Empleado;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -71,7 +74,25 @@ public class EmpleadoFacadeREST extends AbstractFacade<Empleado> {
     public List<Empleado> findAll() {
         return super.findAll();
     }
-
+    @POST
+    @Path("modificar")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Empleado> modificar(@FormParam("dni_empleado") long dni_empleado,@FormParam("telefono_empleado") String telefono_empleado,
+            @FormParam("mail_empleado") String mail_empleado,@FormParam("direccion_empleado") String direccion_empleado,
+            @FormParam("nacimiento_empleado") String nacimiento_empleado) throws ParseException {
+        Date date=new SimpleDateFormat("yyyy-MM-dd").parse(nacimiento_empleado);
+        String cadena = "select e from Empleado e where e.dniEmpleado="+dni_empleado;
+        List<Empleado> p = new ArrayList<>();
+        Empleado emp = new Empleado();
+        Query q = em.createQuery(cadena);
+        p = (List<Empleado>) q.getResultList();
+        emp=p.get(0);
+        emp.setTelefonoEmpleado(telefono_empleado);
+        emp.setMailEmpleado(mail_empleado);
+        emp.setDireccionEmpleado(direccion_empleado);
+        emp.setNacimientoEmpleado(date);
+        return p;
+    }
     @POST
     @Path("listado_filtrado")
     @Produces({MediaType.APPLICATION_JSON})
