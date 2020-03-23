@@ -150,6 +150,17 @@ public class ReciboSueldoFacadeREST extends AbstractFacade<ReciboSueldo> {
         return p;
     }
     @POST
+    @Path("contar")
+    @Produces({MediaType.APPLICATION_JSON})
+    public int count(@FormParam("dni_empleado") long dni_empleado) {
+        String cadena = "select r,e from ReciboSueldo r,Empleado e where "
+                + "r.idEmpleado=e.codigoEmpleado and e.dniEmpleado="+dni_empleado;
+        List<Object> p = new ArrayList<>();
+        Query q = em.createQuery(cadena);
+        p = (List<Object>) q.getResultList();
+        return p.size();
+    }
+    @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(ReciboSueldo entity) {

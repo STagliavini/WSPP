@@ -91,6 +91,7 @@ public class EmpleadoFacadeREST extends AbstractFacade<Empleado> {
         emp.setMailEmpleado(mail_empleado);
         emp.setDireccionEmpleado(direccion_empleado);
         emp.setNacimientoEmpleado(date);
+        em.merge(emp);
         return p;
     }
     @POST

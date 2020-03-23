@@ -65,8 +65,7 @@ public class ReciboSueldo implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_liquidacion")
-    @Temporal(TemporalType.DATE)
-    private Date fechaLiquidacion;
+    private String fechaLiquidacion;
     @NotNull
     @Column(name = "sueldo_basico")
     private BigDecimal sueldoBasico;
@@ -208,14 +207,14 @@ public class ReciboSueldo implements Serializable {
     /**
      * @return the fechaLiquidacion
      */
-    public Date getFechaLiquidacion() {
+    public String getFechaLiquidacion() {
         return fechaLiquidacion;
     }
 
     /**
      * @param fechaLiquidacion the fechaLiquidacion to set
      */
-    public void setFechaLiquidacion(Date fechaLiquidacion) {
+    public void setFechaLiquidacion(String fechaLiquidacion) {
         this.fechaLiquidacion = fechaLiquidacion;
     }
 

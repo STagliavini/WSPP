@@ -83,11 +83,23 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
                 pemp.getNombreUsuario()+"' and e.contraseniaUsuario='"+pemp.getContraseniaUsuario()+"'";
         Query q = em.createQuery(cadena);
         p=(List<Usuario>) q.getResultList();
-        for(int i=0;i<p.size();i++){
-            //p.get(i).setDniEmpleado(emp);
-        }
         return p;
     }
+    @POST
+    @Path("modificar")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Usuario> update(@FormParam("nombre_usuario") String nombre_usuario,@FormParam("contrasenia_usuario") String contrasenia_usuario) {
+        List<Usuario> p=new ArrayList<>();
+        Usuario pemp=new Usuario();
+        String cadena="select e from Usuario e where e.nombreUsuario='"+nombre_usuario+"'";
+        Query q = em.createQuery(cadena);
+        p=(List<Usuario>) q.getResultList();
+        pemp=p.get(0);
+        pemp.setContraseniaUsuario(contrasenia_usuario);
+        em.merge(pemp);
+        return p;
+    }
+    
 
     @GET
     @Path("{from}/{to}")

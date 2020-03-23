@@ -57,8 +57,6 @@ public class Categoria implements Serializable {
     @NotNull
     @Column(name = "estado_categoria")
     private boolean estadoCategoria;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoria")
-    private Collection<CargoEmpleado> cargoEmpleadoCollection;
     
 
     public Categoria() {
@@ -107,14 +105,6 @@ public class Categoria implements Serializable {
         this.estadoCategoria = estadoCategoria;
     }
 
-    @XmlTransient
-    public Collection<CargoEmpleado> getCargoEmpleadoCollection() {
-        return cargoEmpleadoCollection;
-    }
-
-    public void setCargoEmpleadoCollection(Collection<CargoEmpleado> cargoEmpleadoCollection) {
-        this.cargoEmpleadoCollection = cargoEmpleadoCollection;
-    }
     @Override
     public int hashCode() {
         int hash = 0;
