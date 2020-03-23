@@ -62,6 +62,7 @@ public class ReciboSueldo implements Serializable {
     @NotNull
     @Column(name = "id_organismo")
     private int idOrganismo;
+    @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_liquidacion")
