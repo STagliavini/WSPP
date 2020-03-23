@@ -119,6 +119,7 @@ public class EmpleadoFacadeREST extends AbstractFacade<Empleado> {
         } else {
             cadena = cadena + " and e.dniEmpleado like '%"+emp.getDniEmpleado()+"%'";
         }
+        em.getEntityManagerFactory().getCache().evictAll();
         Query q = em.createQuery(cadena);
         p = (List<Empleado>) q.getResultList();
         return p;
