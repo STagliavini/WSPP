@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -30,17 +31,35 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CargoEmpleado.findAll", query = "SELECT c FROM CargoEmpleado c")
-    , @NamedQuery(name = "CargoEmpleado.findByIdEmpleado", query = "SELECT c FROM CargoEmpleado c WHERE c.cargoEmpleadoPK.idEmpleado = :idEmpleado")
-    , @NamedQuery(name = "CargoEmpleado.findByIdOrganismo", query = "SELECT c FROM CargoEmpleado c WHERE c.cargoEmpleadoPK.idOrganismo = :idOrganismo")
-    , @NamedQuery(name = "CargoEmpleado.findByIdCargo", query = "SELECT c FROM CargoEmpleado c WHERE c.cargoEmpleadoPK.idCargo = :idCargo")
-    , @NamedQuery(name = "CargoEmpleado.findByIdCategoria", query = "SELECT c FROM CargoEmpleado c WHERE c.cargoEmpleadoPK.idCategoria = :idCategoria")
+    , @NamedQuery(name = "CargoEmpleado.findByIdEmpleado", query = "SELECT c FROM CargoEmpleado c WHERE c.idEmpleado = :idEmpleado")
+    , @NamedQuery(name = "CargoEmpleado.findByIdOrganismo", query = "SELECT c FROM CargoEmpleado c WHERE c.idOrganismo = :idOrganismo")
+    , @NamedQuery(name = "CargoEmpleado.findByIdCargo", query = "SELECT c FROM CargoEmpleado c WHERE c.idCargo = :idCargo")
+    , @NamedQuery(name = "CargoEmpleado.findByIdCategoria", query = "SELECT c FROM CargoEmpleado c WHERE c.idCategoria = :idCategoria")
     , @NamedQuery(name = "CargoEmpleado.findByFechaIngresoOrganismo", query = "SELECT c FROM CargoEmpleado c WHERE c.fechaIngresoOrganismo = :fechaIngresoOrganismo")
     , @NamedQuery(name = "CargoEmpleado.findByEstado", query = "SELECT c FROM CargoEmpleado c WHERE c.estado = :estado")})
 public class CargoEmpleado implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected CargoEmpleadoPK cargoEmpleadoPK;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id_empleado")
+    private int idEmpleado;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id_organismo")
+    private int idOrganismo;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id_cargo")
+    private int idCargo;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id_categoria")
+    private int idCategoria;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_ingreso_organismo")
@@ -67,26 +86,14 @@ public class CargoEmpleado implements Serializable {
     }
 
     public CargoEmpleado(CargoEmpleadoPK cargoEmpleadoPK) {
-        this.cargoEmpleadoPK = cargoEmpleadoPK;
+    
     }
 
     public CargoEmpleado(CargoEmpleadoPK cargoEmpleadoPK, Date fechaIngresoOrganismo, boolean estado) {
-        this.cargoEmpleadoPK = cargoEmpleadoPK;
         this.fechaIngresoOrganismo = fechaIngresoOrganismo;
         this.estado = estado;
     }
 
-    public CargoEmpleado(int idEmpleado, int idOrganismo, int idCargo, int idCategoria) {
-        this.cargoEmpleadoPK = new CargoEmpleadoPK(idEmpleado, idOrganismo, idCargo, idCategoria);
-    }
-
-    public CargoEmpleadoPK getCargoEmpleadoPK() {
-        return cargoEmpleadoPK;
-    }
-
-    public void setCargoEmpleadoPK(CargoEmpleadoPK cargoEmpleadoPK) {
-        this.cargoEmpleadoPK = cargoEmpleadoPK;
-    }
 
     public Date getFechaIngresoOrganismo() {
         return fechaIngresoOrganismo;
@@ -136,29 +143,61 @@ public class CargoEmpleado implements Serializable {
         this.empleado = empleado;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (cargoEmpleadoPK != null ? cargoEmpleadoPK.hashCode() : 0);
-        return hash;
+
+    /**
+     * @return the idEmpleado
+     */
+    public int getIdEmpleado() {
+        return idEmpleado;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CargoEmpleado)) {
-            return false;
-        }
-        CargoEmpleado other = (CargoEmpleado) object;
-        if ((this.cargoEmpleadoPK == null && other.cargoEmpleadoPK != null) || (this.cargoEmpleadoPK != null && !this.cargoEmpleadoPK.equals(other.cargoEmpleadoPK))) {
-            return false;
-        }
-        return true;
+    /**
+     * @param idEmpleado the idEmpleado to set
+     */
+    public void setIdEmpleado(int idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
-    @Override
-    public String toString() {
-        return "Entity.CargoEmpleado[ cargoEmpleadoPK=" + cargoEmpleadoPK + " ]";
+    /**
+     * @return the idOrganismo
+     */
+    public int getIdOrganismo() {
+        return idOrganismo;
+    }
+
+    /**
+     * @param idOrganismo the idOrganismo to set
+     */
+    public void setIdOrganismo(int idOrganismo) {
+        this.idOrganismo = idOrganismo;
+    }
+
+    /**
+     * @return the idCargo
+     */
+    public int getIdCargo() {
+        return idCargo;
+    }
+
+    /**
+     * @param idCargo the idCargo to set
+     */
+    public void setIdCargo(int idCargo) {
+        this.idCargo = idCargo;
+    }
+
+    /**
+     * @return the idCategoria
+     */
+    public int getIdCategoria() {
+        return idCategoria;
+    }
+
+    /**
+     * @param idCategoria the idCategoria to set
+     */
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
     
 }
