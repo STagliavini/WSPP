@@ -5,7 +5,10 @@
  */
 package Entity.service;
 
+import Entity.Cargo;
+import Entity.Categoria;
 import Entity.Empleado;
+import Entity.Organismo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,6 +76,54 @@ public class EmpleadoFacadeREST extends AbstractFacade<Empleado> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Empleado> findAll() {
         return super.findAll();
+    }
+    @POST
+    @Path("listado_organismos")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Organismo> findOrganismo(@FormParam("id_cargo")int id_cargo,@FormParam("dni_empleado") long dni_empleado,@FormParam("nombre_organismo")String nombre_organismo,@FormParam("codigo_categoria")String codigo_categoria) {
+        String cadena = "select o from Organismo o,CargoEmpleado r,Empleado e where o.idOrganismo=r.idOrganismo and r.idEmpleado=e.codigoEmpleado";
+        if(dni_empleado!=0){
+            cadena=cadena+" and e.dniEmpleado like '%"+dni_empleado+"%'";
+        }
+        List<Organismo> p = new ArrayList<>();
+        Query q = em.createQuery(cadena);
+        p = (List<Organismo>) q.getResultList();
+        return p;
+    }
+    @POST
+    @Path("listado_cargos")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Cargo> findCargos(@FormParam("id_cargo")int id_cargo,@FormParam("dni_empleado") long dni_empleado,@FormParam("nombre_organismo")String nombre_organismo,@FormParam("codigo_categoria")String codigo_categoria) {
+        String cadena = "select c from Cargo c,CargoEmpleado r,Empleado e,Organismo o where c.idCargo=r.idCargo and r.idEmpleado=e.codigoEmpleado and o.idOrganismo=r.idOrganismo";
+        if(dni_empleado!=0){
+            cadena=cadena+" and e.dniEmpleado like '%"+dni_empleado+"%'";
+        }
+        if(!nombre_organismo.equals("Seleccionar un Organismo")){
+            cadena=cadena+" and o.nombreOrganismo='"+nombre_organismo+"'";
+        }
+        List<Cargo> p = new ArrayList<>();
+        Query q = em.createQuery(cadena);
+        p = (List<Cargo>) q.getResultList();
+        return p;
+    }
+    @POST
+    @Path("listado_categorias")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Categoria> findCategorias(@FormParam("id_cargo")int id_cargo,@FormParam("dni_empleado") long dni_empleado,@FormParam("nombre_organismo")String nombre_organismo,@FormParam("codigo_categoria")String codigo_categoria,@FormParam("nombre_cargo")String nombre_cargo) {
+        String cadena = "select ca from Categoria ca,CargoEmpleado r,Empleado e,Organismo o,Cargo c where ca.idCategoria=r.idCategoria and r.idEmpleado=e.codigoEmpleado and o.idOrganismo=r.idOrganismo and c.idCargo=r.idCargo";
+        if(dni_empleado!=0){
+            cadena=cadena+" and e.dniEmpleado like '%"+dni_empleado+"%'";
+        }
+        if(!nombre_organismo.equals("Seleccionar un Organismo")){
+            cadena=cadena+" and o.nombreOrganismo='"+nombre_organismo+"'";
+        }
+        if(!nombre_cargo.equals("Seleccionar un Cargo")){
+            cadena=cadena+" and c.nombreCargo='"+nombre_cargo+"'";
+        }
+        List<Categoria> p = new ArrayList<>();
+        Query q = em.createQuery(cadena);
+        p = (List<Categoria>) q.getResultList();
+        return p;
     }
     @POST
     @Path("modificar")
