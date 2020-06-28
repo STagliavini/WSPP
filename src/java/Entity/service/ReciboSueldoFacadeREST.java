@@ -273,7 +273,7 @@ public class ReciboSueldoFacadeREST extends AbstractFacade<ReciboSueldo> {
         parametros.put("total_recargo",re.get(0).getSueldoBasico().add(re.get(0).getMontoAntiguedad()));
         parametros.put("total_descuento",re.get(0).getJubilacion().add(re.get(0).getObraSocial()));
         JasperPrint jasperPrint=JasperFillManager.fillReport(context.getRealPath("/reportes/recibo.jasper"),parametros);
-        File jasp=new File("/home/santiagoat/WSPP/web/recibos/"+emp.get(0).getCodigoEmpleado()+org.get(0).getIdOrganismo()
+        File jasp=new File("C:/Users/Santiago Tagliavini/Documents/WSPP/web/recibos/"+emp.get(0).getCodigoEmpleado()+org.get(0).getIdOrganismo()
                 +car.get(0).getIdCargo()+re.get(0).getIdCategoria()+mes+"_"+anio+".pdf");
         OutputStream stream=new FileOutputStream(jasp);
         Response.ResponseBuilder response=Response.ok(jasp.getPath());
