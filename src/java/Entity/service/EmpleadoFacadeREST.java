@@ -151,9 +151,12 @@ public class EmpleadoFacadeREST extends AbstractFacade<Empleado> {
     public List<Object> findFilter(@FormParam("nombre_empleado") String nombre_empleado, @FormParam("dni_empleado") long dni_empleado,@FormParam("apellido_empleado") String apellido_empleado,
             @FormParam("nombre_organismo") String nombre_organismo,
             @FormParam("codigo_categoria") String codigo_categoria,@FormParam("nombre_cargo") String nombre_cargo) {
-        String cadena = "select r,o,c,ca,e from CargoEmpleado r,Organismo o,Cargo c,Categoria ca,Empleado e where "
-                + "r.idEmpleado=e.codigoEmpleado and r.idOrganismo=o.idOrganismo and r.idCargo=c.idCargo and "
-                + "r.idCategoria=ca.idCategoria and ";
+//        String cadena = "select r,o,c,ca,e from Organismo o,Cargo c,Categoria ca,CargoEmpleado r,Empleado e where r.idEmpleado=e.codigoEmpleado and r.idOrganismo=o.idOrganismo and r.idCargo=c.idCargo and "
+//                + "r.idCategoria=ca.idCategoria and ";
+        String cadena="select r,o,c,ca,e from Empleado e left join CargoEmpleado r on r.idEmpleado=e.codigoEmpleado "
+                + "left join Organismo o on o.idOrganismo=r.idOrganismo "
+                + "left join Cargo c on c.idCargo=r.idCargo "
+                + "left join Categoria ca on ca.idCategoria=r.idCategoria where";
         List<Object> p = new ArrayList<>();
         Empleado emp = new Empleado();
         emp.setNombreEmpleado(nombre_empleado);
@@ -175,19 +178,19 @@ public class EmpleadoFacadeREST extends AbstractFacade<Empleado> {
             cadena = cadena + " and e.dniEmpleado like '%"+emp.getDniEmpleado()+"%'";
         }
         if ((nombre_organismo== null || nombre_organismo.isEmpty()||nombre_organismo.equals("Seleccionar un Organismo"))) {
-            cadena = cadena + " and o.nombreOrganismo!=''";
+            cadena = cadena + " and (o.nombreOrganismo!='' or o.nombreOrganismo is null)";
         } else {
-            cadena = cadena + " and o.nombreOrganismo like '%" + nombre_organismo+"%'";
+            cadena = cadena + " and o.nombreOrganismo='" + nombre_organismo+"'";
         }
         if (codigo_categoria == null||codigo_categoria.isEmpty()||codigo_categoria.equals("Seleccionar una Categoria")) {
-            cadena = cadena + " and ca.codigoCategoria!=0";
+            cadena = cadena + " and (ca.codigoCategoria!=0 or ca.codigoCategoria is null)";
         } else {
-            cadena = cadena + " and ca.codigoCategoria like '%"+codigo_categoria+"%'";
+            cadena = cadena + " and ca.codigoCategoria='"+codigo_categoria+"'";
         }
         if (nombre_cargo == null||nombre_cargo.isEmpty()||nombre_cargo.equals("Seleccionar un Cargo")) {
-            cadena = cadena + " and c.nombreCargo!=''";
+            cadena = cadena + " and (c.nombreCargo!='' or c.nombreCargo is null)";
         } else {
-            cadena = cadena + " and c.nombreCargo like '%"+nombre_cargo+"%'";
+            cadena = cadena + " and c.nombreCargo='"+nombre_cargo+"'";
         }
         em.getEntityManagerFactory().getCache().evictAll();
         Query q = em.createQuery(cadena);
