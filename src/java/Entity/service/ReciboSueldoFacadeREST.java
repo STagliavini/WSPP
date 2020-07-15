@@ -176,6 +176,7 @@ public class ReciboSueldoFacadeREST extends AbstractFacade<ReciboSueldo> {
         } else {
             cadena = cadena + " and r.fechaLiquidacion<='"+fecha_final+"'";
         }
+        cadena=cadena+" order by r.fechaLiquidacion";
         em.getEntityManagerFactory().getCache().evictAll();
         Query q = em.createQuery(cadena);
         p = (List<Object>) q.getResultList();
